@@ -80,18 +80,18 @@ const styles = StyleSheet.create({
     fontSize: 25,
     color: '#000', // Cor dos ícones de navegação
   },
-  navButton: {
+  navButton: { // Estilo para o botão de navegação (para posicionar o badge)
     position: 'relative',
-    padding: 5,
+    padding: 5, // Espaçamento interno para o clique
   },
-  notificationBadge: {
+  notificationBadge: { // Estilo para o ponto/círculo de notificação
     position: 'absolute',
     top: 0,
     right: 0,
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#ff3b30',
+    backgroundColor: '#ff3b30', // Cor vermelha para o badge
   },
 });
 

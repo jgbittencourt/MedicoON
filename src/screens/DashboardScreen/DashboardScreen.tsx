@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image } from 'react-native';
 import styles from './DashboardScreenStyles'; // Importa os estilos
 import Icon from 'react-native-vector-icons/Ionicons'; // Importa um conjunto de ícones (ex: Ionicons)
@@ -14,6 +14,9 @@ const DashboardScreen = () => {
   const navigation = useNavigation<DashboardScreenNavigationProp>(); // Obtém a instância de navegação
   const route = useRoute<DashboardScreenRouteProp>(); // Obtém os parâmetros da rota
   
+  // Adicionando estado para controlar a visibilidade do badge de notificação
+  const [hasNewNotifications, setHasNewNotifications] = useState(true); // Começa com true para simular novas notificações
+
   // Acessa userData de forma segura, verificando se route.params existe
   const userData = route.params?.userData; 
 
@@ -25,7 +28,7 @@ const DashboardScreen = () => {
 
   const handleNotificationsPress = () => {
     console.log('Navegando para Notificações');
-    navigation.navigate('Notification', { userData }); // Passando userData para a tela de notificações
+    navigation.navigate('Notification');
   };
   const handleCalendarPress = () => {
     console.log('Navegando para Agenda');
@@ -81,7 +84,8 @@ const DashboardScreen = () => {
       <View style={styles.bottomNav}>
         <TouchableOpacity onPress={handleNotificationsPress} style={styles.navButton}>
           <Icon name="notifications-outline" size={25} style={styles.navIcon} />
-          <View style={styles.notificationBadge} />
+          {/* Renderiza o badge apenas se houver novas notificações */}
+          {hasNewNotifications && <View style={styles.notificationBadge} />}
         </TouchableOpacity>
         <TouchableOpacity onPress={handleCalendarPress}>
           <Icon name="calendar-outline" size={25} style={styles.navIcon} />

@@ -15,24 +15,30 @@ interface AgendaItem {
 }
 
 const CalendarScreen = () => {
-  console.log('CalendarScreen component is rendering'); // Log para verificar se o componente renderiza
+  console.log('CalendarScreen component is rendering');
   const navigation = useNavigation<CalendarScreenNavigationProp>();
 
   // Dados placeholder para a agenda
   const agendaData: AgendaItem[] = [
-    { id: '1', icon: 'calendar', text: 'Consultas: Ex.: "Consulta com Dr. João – 20/02 às 10h"' },
-    { id: '2', icon: 'medkit', text: 'Lembretes de Medicação: Ex.: "Tomar remédio às 15h"' },
-    { id: '3', icon: 'document', text: 'Retornos: Ex.: "Retorno com Dra. Mariana – 28/02"' },
-    { id: '4', icon: 'add-circle', text: 'Agendamento Rápido: Botão direto para marcar consultas.' },
+    { id: '1', icon: 'calendar-outline', text: 'Consulta com Dr. João – 20/02 às 10h' },
+    { id: '2', icon: 'medkit-outline', text: 'Lembrete de Medicação: Tomar remédio às 15h' },
+    { id: '3', icon: 'document-outline', text: 'Retorno com Dra. Mariana – 28/02' },
+    { id: '4', icon: 'add-circle-outline', text: 'Agendamento Rápido: Botão direto para marcar consultas.' },
   ];
 
-  console.log('Agenda data:', agendaData); // Log para verificar os dados da agenda
+  console.log('Agenda data:', agendaData);
 
-  const renderAgendaItem = ({ item }: { item: AgendaItem }) => {
-    console.log('Rendering agenda item:', item); // Log para cada item renderizado
+  const renderAgendaItem = ({ item, index }: { item: AgendaItem, index: number }) => {
+    console.log('Rendering agenda item:', item);
     return (
-      <TouchableOpacity style={styles.agendaItem}>
-        <Icon name={item.icon} size={20} color="#1F1F1F" style={styles.itemIcon} />
+      <TouchableOpacity
+        style={[
+          styles.agendaItem,
+          index === 0 && { marginTop: 35 }, // Aumentando o espaço acima do primeiro item
+        ]}
+        activeOpacity={0.9}
+      >
+        <Icon name={item.icon} size={24} color="#007bff" style={styles.itemIcon} /> {/* Ícone azul */}
         <Text style={styles.itemText}>{item.text}</Text>
       </TouchableOpacity>
     );
@@ -41,7 +47,7 @@ const CalendarScreen = () => {
   const handleMenuPress = () => console.log('Menu pressed');
   const handleSettingsPress = () => console.log('Settings pressed');
 
-    // Manipuladores de eventos para a barra de navegação inferior (placeholders)
+  // Manipuladores de eventos para a barra de navegação inferior (placeholders)
   const handleNotificationsPress = () => console.log('Notificações');
   const handleCalendarPress = () => console.log('Calendário (atual)');
   const handleHomePress = () => console.log('Home');
@@ -55,6 +61,7 @@ const CalendarScreen = () => {
         <TouchableOpacity onPress={handleMenuPress}>
           <Icon name="menu" size={30} color="#1F1F1F" />
         </TouchableOpacity>
+        {/* Título simples no centro */}
         <Text style={styles.headerTitle}>Minha Agenda</Text>
         <TouchableOpacity onPress={handleSettingsPress}>
           <Icon name="settings-outline" size={30} color="#1F1F1F" />
@@ -64,7 +71,7 @@ const CalendarScreen = () => {
       {/* Agenda List */}
       <FlatList
         data={agendaData}
-        renderItem={renderAgendaItem}
+        renderItem={({ item, index }) => renderAgendaItem({ item, index })}
         keyExtractor={item => item.id}
         contentContainerStyle={styles.agendaList}
         ListEmptyComponent={<Text>Nenhum item na agenda.</Text>}
@@ -75,7 +82,7 @@ const CalendarScreen = () => {
         <TouchableOpacity onPress={handleNotificationsPress}>
           <Icon name="notifications-outline" size={25} style={styles.navIcon} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={handleCalendarPress}> {/* Ícone de calendário, possivelmente destacado */}
+        <TouchableOpacity onPress={handleCalendarPress}> { /* Ícone de calendário, possivelmente destacado */}
           <Icon name="calendar" size={25} color="#007bff" />
         </TouchableOpacity>
         <TouchableOpacity onPress={handleHomePress}>
@@ -103,7 +110,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingTop: 40,
-    marginBottom: 20,
+    paddingBottom: 20, // Espaçamento abaixo do header
+    backgroundColor: '#62a0d2', // Cor de fundo do header
   },
   headerTitle: {
     fontSize: 20,
@@ -113,6 +121,7 @@ const styles = StyleSheet.create({
   agendaList: {
     paddingHorizontal: 15,
     paddingBottom: 80, // Espaço para a barra de navegação
+    paddingTop: 10, // Espaço acima da lista
   },
   agendaItem: {
     flexDirection: 'row',
@@ -120,7 +129,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 10,
     padding: 15,
-    marginBottom: 10,
+    marginBottom: 30, // Aumentando o espaço entre os itens
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
   },
   itemIcon: {
     marginRight: 15,
@@ -128,13 +139,13 @@ const styles = StyleSheet.create({
   itemText: {
     fontSize: 16,
     color: '#1F1F1F',
-    flex: 1, // Permite que o texto ocupe o espaço restante
+    flex: 1,
   },
    bottomNav: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: '#fff', // Fundo branco para a barra de navegação inferior
+    backgroundColor: '#fff',
     height: 60,
     position: 'absolute',
     bottom: 0,
@@ -145,7 +156,7 @@ const styles = StyleSheet.create({
   },
   navIcon: {
     fontSize: 25,
-    color: '#000', // Cor dos ícones de navegação
+    color: '#000',
   },
 });
 

@@ -9,24 +9,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 40, // Espaço no topo para a barra de status
-    marginBottom: 20,
+    paddingHorizontal: 15,
+    paddingTop: 40,
+    paddingBottom: 15,
+    backgroundColor: '#62a0d2', // Cor de fundo do header
   },
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff', // Fundo branco para o título
+    backgroundColor: '#fff', // Fundo branco
     borderRadius: 20, // Bordas arredondadas
-    paddingHorizontal: 15,
-    paddingVertical: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    // Ajuste para centralizar melhor, permitindo espaço para os ícones laterais
+    flexGrow: 0, 
+    flexShrink: 1, 
+    flexBasis: 'auto',
   },
   titleText: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#1F1F1F',
-    marginLeft: 5,
-    marginRight: 5,
+    marginHorizontal: 5,
   },
   notificationsList: {
     paddingHorizontal: 10,
@@ -37,7 +41,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 16,
     padding: 18,
-    marginBottom: 18,
+    marginBottom: 25,
     flexDirection: 'row',
     alignItems: 'flex-start',
     shadowColor: '#000',
@@ -49,22 +53,21 @@ const styles = StyleSheet.create({
     borderColor: '#e6e6e6',
   },
   unreadNotification: {
-    backgroundColor: '#eaf4ff',
-    borderLeftWidth: 5,
+    backgroundColor: '#f0f8ff',
+    borderLeftWidth: 4,
     borderLeftColor: '#007bff',
   },
   notificationIcon: {
-    fontSize: 32,
-    color: '#007bff',
-    marginRight: 16,
+    fontSize: 20,
+    color: '#1F1F1F',
+    marginRight: 10,
     marginTop: 2,
-    alignSelf: 'flex-start',
   },
   notificationContent: {
     flex: 1,
   },
   notificationTitle: {
-    fontSize: 17,
+    fontSize: 16,
     fontWeight: 'bold',
     color: '#1F1F1F',
     marginBottom: 4,
@@ -73,14 +76,13 @@ const styles = StyleSheet.create({
     color: '#007bff',
   },
   notificationMessage: {
-    fontSize: 15,
-    color: '#444',
-    marginBottom: 6,
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 4,
   },
   notificationTime: {
     fontSize: 12,
-    color: '#b0b0b0',
-    alignSelf: 'flex-end',
+    color: '#999',
   },
   bottomNav: {
     flexDirection: 'row',
@@ -114,12 +116,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#62a0d2',
+    backgroundColor: '#62a0d2', // Cor de fundo da tela de loading
   },
   loadingText: {
     marginTop: 10,
     fontSize: 16,
-    color: '#fff',
+    color: '#fff', // Cor do texto de loading
   },
 });
 
