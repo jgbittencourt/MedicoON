@@ -139,24 +139,31 @@ const ChatScreen = () => {
     if (recording) {
       await recording.stopAndUnloadAsync();
       const uri = recording.getURI();
-      const sound = await Audio.Sound.createAsync({ uri });
-      const status = sound.sound ? await sound.sound.getStatusAsync() : null;
-      const durationMillis = status && status.isLoaded ? status.durationMillis || 0 : 0;
-      const duration = Math.round(durationMillis / 1000); // Duração em segundos
 
-       if (uri) {
-        const newMessage: AudioMessage = {
-          id: Math.random().toString(),
-          audioUrl: uri,
-          duration: duration,
-          sender: 'me',
-          type: 'audio',
-          createdAt: new Date().toISOString(),
-        };
-        setMessages(previousMessages => [newMessage, ...previousMessages]);
-        // >>> Implementar lógica para upload e envio do áudio real para o backend aqui <<<
-        console.log('Recording stopped and stored at', uri);
-       }
+      if (uri) {
+        try {
+          const soundObject = await Audio.Sound.createAsync({ uri: uri as string });
+          const status = soundObject.sound ? await soundObject.sound.getStatusAsync() : null;
+          const durationMillis = status && status.isLoaded ? status.durationMillis || 0 : 0;
+          const duration = Math.round(durationMillis / 1000);
+
+          const newMessage: AudioMessage = {
+            id: Math.random().toString(),
+            audioUrl: uri as string,
+            duration: duration,
+            sender: 'me',
+            type: 'audio',
+            createdAt: new Date().toISOString(),
+          };
+          setMessages(previousMessages => [newMessage, ...previousMessages]);
+          // >>> Implementar lógica para upload e envio do áudio real para o backend aqui <<<
+          console.log('Recording stopped and stored at', uri);
+        } catch (error) {
+          console.error('Erro ao criar objeto de som ou obter status:', error);
+        }
+      } else {
+        console.error('URI de gravação inválida ou nula.');
+      }
     }
     setRecording(null);
   };
@@ -172,8 +179,11 @@ const ChatScreen = () => {
     } else if (item.type === 'image') {
       return (
          <View style={[styles.messageBubble, item.sender === 'me' ? styles.myMessage : styles.otherMessage, styles.imageMessage]}> {/* Novo estilo para imagem */}
-          {/* <Image source={{ uri: item.imageUrl }} style={styles.chatImage} /> */}
-          <Text>Imagem: {item.imageUrl}</Text> {/* Placeholder */}
+          {/* Envolver o conteúdo da imagem em uma View */}
+          <View>
+             {/* <Image source={{ uri: item.imageUrl }} style={styles.chatImage} /> */}
+             <Text>Imagem: {item.imageUrl}</Text> {/* Placeholder */}
+          </View>
         </View>
       );
     } else if (item.type === 'audio') {

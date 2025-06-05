@@ -47,12 +47,24 @@ const CalendarScreen = () => {
   const handleMenuPress = () => console.log('Menu pressed');
   const handleSettingsPress = () => console.log('Settings pressed');
 
-  // Manipuladores de eventos para a barra de navegação inferior (placeholders)
-  const handleNotificationsPress = () => console.log('Notificações');
-  const handleCalendarPress = () => console.log('Calendário (atual)');
-  const handleHomePress = () => console.log('Home');
-  const handleChatPress = () => console.log('Chat');
-  const handleProfilePress = () => console.log('Perfil');
+  // Manipuladores de eventos para a barra de navegação inferior
+  const handleNotificationsPress = () => {
+    console.log('Navegando para Notificações');
+    navigation.navigate('Notification'); // Navega para Notificações
+  };
+  const handleCalendarPress = () => console.log('Calendário (atual)'); // Já está no Calendário
+  const handleHomePress = () => {
+    console.log('Navegando para Dashboard');
+    navigation.navigate('Dashboard');
+  };
+  const handleChatPress = () => {
+    console.log('Navegando para a lista de Chats');
+    navigation.navigate('ChatList');
+  };
+  const handleProfilePress = () => {
+    console.log('Navegando para Perfil');
+    navigation.navigate('Profile');
+  };
 
   return (
     <View style={styles.container}>

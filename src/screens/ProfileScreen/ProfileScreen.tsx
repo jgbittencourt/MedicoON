@@ -334,7 +334,10 @@ const ProfileScreen = () => {
   };
 
   // Manipuladores de eventos para a barra de navegação inferior
-  const handleNotificationsPress = () => console.log('Notificações');
+  const handleNotificationsPress = () => {
+    console.log('Navegando para Notificações');
+    navigation.navigate('Notification'); // Navega para a tela de Notificação
+  };
   const handleCalendarPress = () => {
     console.log('Navegando para Agenda');
     navigation.navigate('Calendar'); // Navega para a tela de Agenda

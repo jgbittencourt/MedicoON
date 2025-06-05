@@ -45,6 +45,27 @@ const ChatListScreen = () => {
   const handleSettingsPress = () => console.log('Settings pressed');
   const handleSearch = () => console.log('Search pressed');
 
+  // Funções de navegação para a barra inferior
+  const handleNotificationsPress = () => {
+    console.log('Navegando para Notificações');
+    navigation.navigate('Notification'); // Navega para Notificações
+  };
+  const handleCalendarPress = () => {
+    console.log('Navegando para Agenda');
+    navigation.navigate('Calendar'); // Navega para Agenda
+  };
+  const handleHomePress = () => {
+    console.log('Navegando para Dashboard');
+    // Nota: Se o Dashboard espera userData, você precisará obter isso aqui.
+    navigation.navigate('Dashboard' as any); // Navega para o Dashboard
+  };
+  const handleChatPress = () => console.log('Já está na lista de Chats'); // Já está na tela atual
+  const handleProfilePress = () => {
+     console.log('Navegando para Perfil');
+     // Nota: Se o Perfil espera userData, você precisará obter isso aqui.
+     navigation.navigate('Profile' as any); // Navega para o Perfil
+  };
+
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -77,6 +98,35 @@ const ChatListScreen = () => {
         keyExtractor={item => item.id}
         contentContainerStyle={styles.chatList}
       />
+
+      {/* Bottom Navigation */}
+      <View style={styles.bottomNav}>
+        <TouchableOpacity onPress={handleNotificationsPress}>
+          <View style={{ alignItems: 'center' }}>{/* Envolver conteúdo em uma View */}
+            <Icon name="notifications-outline" size={25} style={styles.navIcon} />
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleCalendarPress}>
+          <View style={{ alignItems: 'center' }}>{/* Envolver conteúdo em uma View */}
+            <Icon name="calendar-outline" size={25} style={styles.navIcon} />
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleHomePress}>
+          <View style={{ alignItems: 'center' }}>{/* Envolver conteúdo em uma View */}
+            <Icon name="home-outline" size={25} style={styles.navIcon} />
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleChatPress}>
+          <View style={{ alignItems: 'center' }}>{/* Envolver conteúdo em uma View */}
+            <Icon name="chatbubbles-outline" size={25} style={styles.navIcon} />
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleProfilePress}>
+          <View style={{ alignItems: 'center' }}>{/* Envolver conteúdo em uma View */}
+            <Icon name="person-outline" size={25} style={styles.navIcon} />
+          </View>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -162,6 +212,15 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: '#34c759', // Verde para online
     marginLeft: 5,
+  },
+  bottomNav: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+  },
+  navIcon: {
+    // Add your styles for the navigation icons here
   },
 });
 
