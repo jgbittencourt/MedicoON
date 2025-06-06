@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image } from 'react-native';
 import styles from './DashboardScreenStyles'; // Importa os estilos
 import Icon from 'react-native-vector-icons/Ionicons'; // Importa um conjunto de ícones (ex: Ionicons)
-import { useNavigation, useRoute, RouteProp, useIsFocused } from '@react-navigation/native'; // Importa useRoute, RouteProp e useIsFocused
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native'; // Importa useRoute e RouteProp
 import { StackNavigationProp } from '@react-navigation/stack'; // Importa a tipagem para navegação
 import { RootStackParamList } from '../../navigation/types'; // Importa a tipagem centralizada
-import AsyncStorage from '@react-native-async-storage/async-storage'; // Importar AsyncStorage
 
 // Define a tipagem para a propriedade navigation e route
 type DashboardScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Dashboard'>;
@@ -15,49 +14,8 @@ const DashboardScreen = () => {
   const navigation = useNavigation<DashboardScreenNavigationProp>(); // Obtém a instância de navegação
   const route = useRoute<DashboardScreenRouteProp>(); // Obtém os parâmetros da rota
   
-  // Adicionando estado para controlar a visibilidade do badge de notificação
-  const [hasNewNotifications, setHasNewNotifications] = useState(true);
-  const [currentUserData, setCurrentUserData] = useState<any>(null); // Inicializar com null, vamos carregar no efeito
-
-  const isFocused = useIsFocused(); // Hook para saber se a tela está focada
-
-  // Efeito para carregar userData ao focar na tela, se ainda não estiver carregado
-  useEffect(() => {
-    console.log('Dashboard useEffect disparado. isFocused:', isFocused);
-    const loadUserData = async () => {
-      if (!currentUserData) { // Apenas carrega se userData ainda não estiver no estado
-        console.log('currentUserData não no estado, tentando carregar do AsyncStorage');
-        try {
-          const userDataString = await AsyncStorage.getItem('profileData');
-          console.log('Leitura do AsyncStorage (profileData):', userDataString ? 'Dados encontrados' : 'Nenhum dado');
-          if (userDataString) {
-            const userData = JSON.parse(userDataString);
-            console.log('userData carregado e parseado do AsyncStorage:', userData);
-            setCurrentUserData(userData); // Atualiza o estado
-          } else {
-            console.log('userData não encontrado no AsyncStorage.');
-          }
-        } catch (error) {
-          console.error('Erro ao carregar userData do AsyncStorage:', error);
-        }
-      } else {
-        console.log('currentUserData já no estado:', currentUserData);
-      }
-    };
-
-    if (isFocused) { // Executa a lógica de carregamento quando a tela for focada
-       console.log('Dashboard está focado, executando loadUserData');
-       loadUserData();
-    } else {
-      console.log('Dashboard não está focado');
-    }
-
-  }, [isFocused]); // Rodar efeito quando o estado de foco da tela mudar
-
-  // Acessa userData do estado
-  const userData = currentUserData; 
-
-  console.log('Dashboard renderizando. userData:', userData ? 'Disponível' : 'Indisponível');
+  // Acessa userData de forma segura, verificando se route.params existe
+  const userData = route.params?.userData; 
 
   // Funções de navegação
   const handleProfilePress = () => {
@@ -84,10 +42,10 @@ const DashboardScreen = () => {
 
   // Renderiza a tela somente quando os dados estiverem carregados
   if (!userData) {
+    // Pode adicionar um indicador de loading ou uma mensagem de erro aqui, se necessário
     console.log('userData não disponível, renderizando nulo ou indicador de loading');
-    // Você pode renderizar um loading indicator aqui ao invés de null
-    return <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}><ActivityIndicator size="large" color="#0000ff" /></View>;
-  }
+    return null; // Ou um componente de loading/erro
+  } // Adicionado para garantir que userData exista
 
   return (
     <View style={styles.container}> {/* Envolve o contêiner principal com SafeAreaView */}
@@ -121,11 +79,8 @@ const DashboardScreen = () => {
 
       {/* Barra de navegação inferior */}
       <View style={styles.bottomNav}>
-        <TouchableOpacity onPress={handleNotificationsPress} style={styles.navButton}>
-          <View style={{ alignItems: 'center' }}>
-            <Icon name="notifications-outline" size={25} style={styles.navIcon} />
-            {hasNewNotifications && <View style={styles.notificationBadge} />}
-          </View>
+        <TouchableOpacity onPress={handleNotificationsPress}>
+          <Icon name="notifications-outline" size={25} style={styles.navIcon} />
         </TouchableOpacity>
         <TouchableOpacity onPress={handleCalendarPress}>
           <Icon name="calendar-outline" size={25} style={styles.navIcon} />

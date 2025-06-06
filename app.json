@@ -1,17 +1,20 @@
 {
   "expo": {
-    "name": "Médico ON",
-    "slug": "sistemalogin",
+    "name": "MedicoON",
+    "slug": "MedicoON",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/image/MedicoOn.png",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/image/MedicoOn.png",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -24,6 +27,7 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "sdkVersion": "53.0.0"
   }
 }

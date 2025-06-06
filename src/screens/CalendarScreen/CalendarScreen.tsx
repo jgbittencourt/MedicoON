@@ -2,69 +2,69 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../../navigation/types';
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import { TabParamList } from '../../navigation/types';
 
-type CalendarScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Calendar'>;
+type CalendarScreenNavigationProp = BottomTabNavigationProp<TabParamList, 'Calendar'>;
 
 // Placeholder para um item da agenda
 interface AgendaItem {
   id: string;
   icon: string;
   text: string;
+  time?: string;
+  status?: 'pending' | 'confirmed' | 'completed';
 }
 
 const CalendarScreen = () => {
-  console.log('CalendarScreen component is rendering');
   const navigation = useNavigation<CalendarScreenNavigationProp>();
 
   // Dados placeholder para a agenda
   const agendaData: AgendaItem[] = [
-    { id: '1', icon: 'calendar-outline', text: 'Consulta com Dr. João – 20/02 às 10h' },
-    { id: '2', icon: 'medkit-outline', text: 'Lembrete de Medicação: Tomar remédio às 15h' },
-    { id: '3', icon: 'document-outline', text: 'Retorno com Dra. Mariana – 28/02' },
-    { id: '4', icon: 'add-circle-outline', text: 'Agendamento Rápido: Botão direto para marcar consultas.' },
+    { 
+      id: '1', 
+      icon: 'calendar', 
+      text: 'Consulta com Dr. João', 
+      time: '20/02 às 10h',
+      status: 'confirmed'
+    },
+    { 
+      id: '2', 
+      icon: 'medkit', 
+      text: 'Tomar remédio', 
+      time: 'Hoje às 15h',
+      status: 'pending'
+    },
+    { 
+      id: '3', 
+      icon: 'document', 
+      text: 'Retorno com Dra. Mariana', 
+      time: '28/02 às 14h',
+      status: 'pending'
+    },
+    { 
+      id: '4', 
+      icon: 'add-circle', 
+      text: 'Agendar nova consulta', 
+      status: 'pending'
+    },
   ];
 
-  console.log('Agenda data:', agendaData);
-
-  const renderAgendaItem = ({ item, index }: { item: AgendaItem, index: number }) => {
-    console.log('Rendering agenda item:', item);
-    return (
-      <TouchableOpacity
-        style={[
-          styles.agendaItem,
-          index === 0 && { marginTop: 35 }, // Aumentando o espaço acima do primeiro item
-        ]}
-        activeOpacity={0.9}
-      >
-        <Icon name={item.icon} size={24} color="#007bff" style={styles.itemIcon} /> {/* Ícone azul */}
+  const renderAgendaItem = ({ item }: { item: AgendaItem }) => (
+    <TouchableOpacity style={[styles.agendaItem, item.status ? styles[`${item.status}Status`] : null]}>
+      <View style={styles.iconContainer}>
+        <Icon name={item.icon} size={24} color="#fff" />
+      </View>
+      <View style={styles.itemContent}>
         <Text style={styles.itemText}>{item.text}</Text>
-      </TouchableOpacity>
-    );
-  };
+        {item.time && <Text style={styles.itemTime}>{item.time}</Text>}
+      </View>
+      <Icon name="chevron-forward" size={24} color="#666" />
+    </TouchableOpacity>
+  );
 
   const handleMenuPress = () => console.log('Menu pressed');
   const handleSettingsPress = () => console.log('Settings pressed');
-
-  // Manipuladores de eventos para a barra de navegação inferior
-  const handleNotificationsPress = () => {
-    console.log('Navegando para Notificações');
-    navigation.navigate('Notification'); // Navega para Notificações
-  };
-  const handleCalendarPress = () => console.log('Calendário (atual)'); // Já está no Calendário
-  const handleHomePress = () => {
-    console.log('Navegando para Dashboard');
-    navigation.navigate('Dashboard');
-  };
-  const handleChatPress = () => {
-    console.log('Navegando para a lista de Chats');
-    navigation.navigate('ChatList');
-  };
-  const handleProfilePress = () => {
-    console.log('Navegando para Perfil');
-    navigation.navigate('Profile');
-  };
 
   return (
     <View style={styles.container}>
@@ -73,39 +73,26 @@ const CalendarScreen = () => {
         <TouchableOpacity onPress={handleMenuPress}>
           <Icon name="menu" size={30} color="#1F1F1F" />
         </TouchableOpacity>
-        {/* Título simples no centro */}
         <Text style={styles.headerTitle}>Minha Agenda</Text>
         <TouchableOpacity onPress={handleSettingsPress}>
           <Icon name="settings-outline" size={30} color="#1F1F1F" />
         </TouchableOpacity>
       </View>
 
-      {/* Agenda List */}
-      <FlatList
-        data={agendaData}
-        renderItem={({ item, index }) => renderAgendaItem({ item, index })}
-        keyExtractor={item => item.id}
-        contentContainerStyle={styles.agendaList}
-        ListEmptyComponent={<Text>Nenhum item na agenda.</Text>}
-      />
-
-       {/* Bottom Navigation */}
-      <View style={styles.bottomNav}>
-        <TouchableOpacity onPress={handleNotificationsPress}>
-          <Icon name="notifications-outline" size={25} style={styles.navIcon} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleCalendarPress}> { /* Ícone de calendário, possivelmente destacado */}
-          <Icon name="calendar" size={25} color="#007bff" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleHomePress}>
-          <Icon name="home-outline" size={25} style={styles.navIcon} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleChatPress}>
-          <Icon name="chatbubbles-outline" size={25} style={styles.navIcon} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleProfilePress}>
-          <Icon name="person-outline" size={25} style={styles.navIcon} />
-        </TouchableOpacity>
+      <View style={styles.contentContainer}>
+        {/* Agenda List */}
+        <FlatList
+          data={agendaData}
+          renderItem={renderAgendaItem}
+          keyExtractor={item => item.id}
+          contentContainerStyle={styles.agendaList}
+          ListEmptyComponent={
+            <View style={styles.emptyContainer}>
+              <Icon name="calendar-outline" size={50} color="#666" />
+              <Text style={styles.emptyText}>Nenhum compromisso agendado</Text>
+            </View>
+          }
+        />
       </View>
     </View>
   );
@@ -114,7 +101,11 @@ const CalendarScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#62a0d2', // Cor de fundo do seu app
+    backgroundColor: '#f5f5f5',
+  },
+  contentContainer: {
+    flex: 1,
+    paddingTop: 100,
   },
   header: {
     flexDirection: 'row',
@@ -122,8 +113,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingTop: 40,
-    paddingBottom: 20, // Espaçamento abaixo do header
-    backgroundColor: '#62a0d2', // Cor de fundo do header
+    marginBottom: 20,
+    backgroundColor: '#fff',
+    paddingBottom: 20,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
   },
   headerTitle: {
     fontSize: 20,
@@ -132,43 +129,67 @@ const styles = StyleSheet.create({
   },
   agendaList: {
     paddingHorizontal: 15,
-    paddingBottom: 80, // Espaço para a barra de navegação
-    paddingTop: 10, // Espaço acima da lista
+    paddingTop: 20,
+    paddingBottom: 20,
   },
   agendaItem: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: 15,
-    marginBottom: 30, // Aumentando o espaço entre os itens
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderRadius: 15,
+    padding: 18,
+    marginBottom: 25,
+    elevation: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 1,
   },
-  itemIcon: {
+  iconContainer: {
+    width: 45,
+    height: 45,
+    borderRadius: 22.5,
+    backgroundColor: '#007AFF',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginRight: 15,
+  },
+  itemContent: {
+    flex: 1,
   },
   itemText: {
     fontSize: 16,
+    fontWeight: '600',
     color: '#1F1F1F',
+    marginBottom: 4,
+  },
+  itemTime: {
+    fontSize: 14,
+    color: '#666',
+  },
+  emptyContainer: {
     flex: 1,
-  },
-   bottomNav: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
-    height: 60,
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    borderTopWidth: 1,
-    borderColor: '#ccc',
+    paddingTop: 50,
   },
-  navIcon: {
-    fontSize: 25,
-    color: '#000',
+  emptyText: {
+    fontSize: 16,
+    color: '#666',
+    marginTop: 10,
+  },
+  pendingStatus: {
+    borderLeftWidth: 4,
+    borderLeftColor: '#FFA500',
+  },
+  confirmedStatus: {
+    borderLeftWidth: 4,
+    borderLeftColor: '#34C759',
+  },
+  completedStatus: {
+    borderLeftWidth: 4,
+    borderLeftColor: '#666',
+    opacity: 0.7,
   },
 });
 
